@@ -20,7 +20,7 @@ const newPost = async(req,res)=> {
         const newPost = new post({
             title: req.body.title,
             content : req.body.content,
-            author : req.body.author,
+            author : req.user,
             tags : req.body.tags,
             createdAt : new Date()
         })
@@ -54,7 +54,6 @@ const updatePost = async(req,res)=>{
         console.error(error);
         res.status(500).json({ success: false, msg: 'Server error' });
     }
-
 }
 
 const deletePost = async(req,res)=>{
@@ -72,4 +71,21 @@ const deletePost = async(req,res)=>{
     }
 }
 
-module.exports = {newPost,getPost,updatePost,deletePost}
+const myPosts = async (req,res) =>{
+    const id = req.user
+    // console.log(id);
+    try {
+        const mypost = await post.find({author:id}) 
+        if(!mypost) return res.status(404).json({success:false,mesg:"No posts found"})   
+
+        res.status(200).json({ success: true,data: mypost});
+        
+    } catch (error) {
+          console.error(error);
+        res.status(500).json({ success: false, msg: 'Server error' });
+    }
+    
+}
+
+
+module.exports = {newPost,getPost,updatePost,deletePost,myPosts}

@@ -13,8 +13,9 @@ const BlogSchema = new Schema({
         required:[true,'Post content is required']
     },
     author: {
-        type: String,
-        default: 'Anonymous',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
     },
     tags:{
         type: [String],
